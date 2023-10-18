@@ -7,8 +7,8 @@ import os
 import subprocess
 
 def _download_imdb(flag_overwrite=False):
-    if os.path.isdir('../data/') is False:
-        os.mkdir('../data/')
+    if os.path.isdir('../ml-latest-small/') is False:
+        os.mkdir('../ml-latest-small/')
     DOWNLOAD_INFO = [('title.basics.tsv.gz', 'https://datasets.imdbws.com/title.basics.tsv.gz'),
                      ('title.akas.tsv.gz', 'https://datasets.imdbws.com/title.akas.tsv.gz'),
                      ('title.crew.tsv.gz', 'https://datasets.imdbws.com/title.crew.tsv.gz'),

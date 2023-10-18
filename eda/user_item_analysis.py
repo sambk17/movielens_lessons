@@ -3,8 +3,11 @@
 import pandas as pd
 
 # Ratings
-users_items = pd.read_csv("../data/links.csv")
+users_items = pd.read_csv("../ml-latest-small/links.csv")
 print(users_items)
+
+# Timestamp
+
 
 # Ratings per Genre
 

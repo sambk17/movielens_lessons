@@ -2,9 +2,15 @@
 Hello World :wave:!  This repository encompasses many of the valuable lessons I learned with Recommender Systems while at HBO/HBO Max/Warner Bros. Discovery.  Since I worked A LOT with user-item interactions over the years, it is most fitting that everything here is performed using public data only (aka MovieLens dataset).  Since my hope is to help others learn for educational or academic purposes, I will stick to the smallest and latest dataset (100K).
 
 # Prereqs
-* Download MovieLens Latest Dataset [ml-latests-small.zip](https://grouplens.org/datasets/movielens/)
-  * Note: This is the 100k small dataset: 100,000 ratings and 3,600 tag applications applied to 9,000 movies by 600 users. Last updated 9/2018.
-* [Optional] Create a folder in the root of this repo called `data/` (e.g. `movielens_lessons/data/`)
+* Within this repo: 
+```
+curl -O http://files.grouplens.org/datasets/movielens/ml-latest-small.zip
+unzip ml-100k.zip
+```
+  * Note: This is the 100k small dataset which can also be downloaded from [the MovieLens website](https://grouplens.org/datasets/movielens/).  It consists of:
+      * 100K ratings 
+      * 9K movies 
+      * 600 users
 * [Optional] Download [IMDB Non-Commercial Datasets](https://developer.imdb.com/non-commercial-datasets/) to further enrich the Movies (items): [Link](https://datasets.imdbws.com/).  Save the following files under `data/` folder:
   * title.basics.tsv.gz (171MB)
   * title.ratings.tsv.gz (7MB)
