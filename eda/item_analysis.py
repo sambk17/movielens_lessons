@@ -1,9 +1,8 @@
 import pandas as pd
+import numpy as np
 from datetime import datetime
 
 items = pd.read_csv("../data/movies.csv")
-print(items)
-print(items.dtypes)
 
 # Describe Table
 print(items.describe())
@@ -13,30 +12,39 @@ print(items.describe())
 print("Number of distinct items: " + str(len(set(items["movieId"].to_numpy()))))
 
 # Split out Title to Title and Year -> Used to analyze Movies Per Year
+
+# [Minor] Validation on the following movie as multiple "()" found in the title value
+# print(items[items['title'].str.contains('Cité des enfants perdus')])
+print(items[items['title'].str.contains('Nocturnal Animals')])
+print(items[items['title'].str.contains('Ready Player One')])
+
 items['title_year'] = items['title'].str.replace(')','') \
                     .str.split('(') \
-                    .str[1]
+                    .str[-1]
 
 items['title'] = items['title'].str.replace(')','') \
                     .str.split('(') \
-                    .str[0][:-1] 
-
-# Create Categorical Buckets per Decade
-# Ran into an issue with movie = Cité des enfants perdus, La
-    # Search for the movie
-    # Figure out how I need to resplit
+                    .str[0]
 
 
-def convert(dt):
-    try:
-        return datetime.strptime(dt, '%d/%m/%Y').strftime('%d/%m/%Y')
-    except ValueError:
-        return datetime.strptime(dt, '%m/%d/%Y').strftime('%d/%m/%Y')
+# [Minor] Validation that none of the Titles are Null (this should be 0)
+# print(np.sum(items['title'].isnull().to_numpy()))
+# print(items[items['title'].str.contains('City of Lost Children')])
 
-items['title_date'] = '01/01/' + items['title_year'].astype(str)
-items['title_date'] = items['title_date'].apply(convert)
-print(items)
-print(items.dtypes)
+# # Create Categorical Buckets per Decade
+
+print(items['title_year'].sort_values())
+
+# def convert(dt):
+#     try:
+#         return datetime.strptime(dt, '%d/%m/%Y').strftime('%d/%m/%Y')
+#     except ValueError:
+#         return datetime.strptime(dt, '%m/%d/%Y').strftime('%d/%m/%Y')
+
+# items['title_date'] = '01/01/' + items['title_year'].astype(str)
+# items['title_date'] = items['title_date'].apply(convert)
+# print(items)
+# print(items.dtypes)
 
 
 # items['decade'] = items['title_year'].
