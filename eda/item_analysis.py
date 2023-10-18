@@ -15,41 +15,27 @@ print("Number of distinct items: " + str(len(set(items["movieId"].to_numpy()))))
 
 # [Minor] Validation on the following movie as multiple "()" found in the title value
 # print(items[items['title'].str.contains('Cité des enfants perdus')])
-print(items[items['title'].str.contains('Nocturnal Animals')])
-print(items[items['title'].str.contains('Ready Player One')])
+# print(items[items['title'].str.contains('Nocturnal Animals')])
+# print(items[items['title'].str.contains('Ready Player One')])
 
-items['title_year'] = items['title'].str.replace(')','') \
-                    .str.split('(') \
-                    .str[-1]
+items['title_year'] = items.title.str.extract("\((\d{4})\)", expand=True)
 
-items['title'] = items['title'].str.replace(')','') \
-                    .str.split('(') \
-                    .str[0]
+items['title_year'] = pd.to_datetime(items['title_year'], format='%Y')
+items['title_year'] = items['title_year'].dt.year # As there are some NaN years, resulting type will be float (decimals)
+items.title = items.title.str[:-7]
 
+# # Create Decade Buckets using title_year
 
-# [Minor] Validation that none of the Titles are Null (this should be 0)
-# print(np.sum(items['title'].isnull().to_numpy()))
-# print(items[items['title'].str.contains('City of Lost Children')])
-
-# # Create Categorical Buckets per Decade
-
-print(items['title_year'].sort_values())
-
-# def convert(dt):
-#     try:
-#         return datetime.strptime(dt, '%d/%m/%Y').strftime('%d/%m/%Y')
-#     except ValueError:
-#         return datetime.strptime(dt, '%m/%d/%Y').strftime('%d/%m/%Y')
-
-# items['title_date'] = '01/01/' + items['title_year'].astype(str)
-# items['title_date'] = items['title_date'].apply(convert)
-# print(items)
-# print(items.dtypes)
-
-
-# items['decade'] = items['title_year'].
 
 # Genres Problem
+
+genres_unique = pd.DataFrame(items.genres.str.split('|').tolist()).stack().unique()
+genres_unique = pd.DataFrame(genres_unique, columns=['genre']) # Format into DataFrame to store later
+items = items.join(items.genres.str.get_dummies().astype(int))
+items.drop('genres', inplace=True, axis=1)
+
+# [Minor] Validation that none of the Titles are Null (this should be 0) -> Use IMDB?
+print ("Number of movies Null values: ", max(items.isnull().sum()))
 
 # Genre Popularity / Frequency
 
