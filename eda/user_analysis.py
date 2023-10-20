@@ -1,6 +1,6 @@
 import pandas as pd
 
-users = pd.read_csv("../data/ratings.csv")
+users = pd.read_csv("../ml-latest-small/ratings.csv")
 print(users)
 
 # Number of Users

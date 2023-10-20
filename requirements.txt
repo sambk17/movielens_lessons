@@ -4,3 +4,4 @@ scipy
 sklearn
 notebook
 matplotlib
+scikit-learn

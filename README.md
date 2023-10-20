@@ -1,10 +1,20 @@
 # movielens_lessons
-Hello World :wave:!  This repository encompasses many of the valuable lessons I learned with Recommender Systems while at HBO/HBO Max/Warner Bros. Discovery.  Since I worked A LOT with user-item interactions over the years, it is most fitting that everything here is performed using public data only (aka MovieLens dataset).  Since my hope is to help others learn for educational or academic purposes, I will stick to the smallest and latest dataset (100K).
+Hello World :wave:!  This repository encompasses many of the valuable lessons I learned with Recommender Systems while at HBO/HBO Max/Warner Bros. Discovery.  Since I worked with user-item interactions over the years, it is most fitting that everything here is performed using public data only (aka MovieLens dataset).  Since my hope is to help others learn for educational or academic purposes, I will stick to the smallest and latest dataset (100K).
 
 # Prereqs
-* Download MovieLens Latest Dataset [ml-latests-small.zip](https://grouplens.org/datasets/movielens/)
-  * Note: This is the 100k small dataset: 100,000 ratings and 3,600 tag applications applied to 9,000 movies by 600 users. Last updated 9/2018.
-* [Optional] Create a folder in the root of this repo called `data/` (e.g. `movielens_lessons/data/`)
+* Within this repo's root location, run the following: 
+```
+curl -O http://files.grouplens.org/datasets/movielens/ml-latest-small.zip
+unzip ml-latest-small.zip
+```
+* If this (:up:) doesn't work then:
+  1. This 100k small dataset can also be downloaded directly from [the MovieLens website](https://grouplens.org/datasets/movielens/).  
+  2. Create a new folder `mkdir ml-latest-small` and move (`mv`) the contents from this zip file into the new folder
+* The zip file consists of csv's containing:
+      * 100K ratings : ratings.csv
+      * 9K movies : movies.csv
+      * 600 users
+      * and tags which are not that important (for now)
 * [Optional] Download [IMDB Non-Commercial Datasets](https://developer.imdb.com/non-commercial-datasets/) to further enrich the Movies (items): [Link](https://datasets.imdbws.com/).  Save the following files under `data/` folder:
   * title.basics.tsv.gz (171MB)
   * title.ratings.tsv.gz (7MB)
@@ -21,17 +31,9 @@ Hello World :wave:!  This repository encompasses many of the valuable lessons I 
 # Models - Implicit vs Explicit
 * I will go into detail about computing predictions using either implicit (the interaction only) or explicit (ratings)
 * Models I'm knowledgeable with:
-  * ALS
-  * Matrix Factorization (LightFM)
-  * Encoders (EASE)
+  * Matrix Factorization: ALS, LightFM
+  * Auto-encoder: EASE, [Future] Other Neural Networks (Hint: I don't think they do much)
   * XGBoost
-  * [Future] Neural Networks (I don't think they do much)
-
-# Model Frameworks
-* Pandas / Sklearn
-* PySpark (MLlib)
-* Tensorflow
-* PyTorch
 
 # Offline Evaluation
 * How to Compute Accurary

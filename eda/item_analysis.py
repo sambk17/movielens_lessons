@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from datetime import datetime
 
-items = pd.read_csv("../data/movies.csv")
+items = pd.read_csv("../ml-latest-small/movies.csv")
 
 # Describe Table
 print(items.describe())
