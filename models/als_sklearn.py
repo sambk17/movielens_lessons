@@ -9,11 +9,12 @@ import numpy as np
 import scipy.sparse as sp
 from sklearn.model_selection import train_test_split
 from sklearn.metrics.pairwise import cosine_similarity
+import time
 
 # from scipy.sparse.linalg import spsolve
 # from sklearn.preprocessing import MinMaxScaler
 
-users_items = pd.read_csv("../data/ratings.csv")
+users_items = pd.read_csv("../ml-latest-small/ratings.csv")
 print(users_items.dtypes)
 print(users_items.describe())
 
@@ -62,7 +63,8 @@ cosine_similarity_matrix_ll = cosine_similarity_matrix.tolil()
 
 def implicit_weighted_ALS(training_set, lambda_val = 0.1, alpha = 40, iterations = 10, rank_size = 20, seed = 0):
     '''
-    Implicit weighted ALS taken from Hu, Koren, and Volinsky 2008. Designed for alternating least squares and implicit
+    Implicit weighted ALS taken from Hu, Koren, and Volinsky 2008: http://yifanhu.net/PUB/cf.pdf 
+    Designed for alternating least squares and implicit
     feedback based collaborative filtering. 
     
     parameters:
@@ -115,6 +117,7 @@ def implicit_weighted_ALS(training_set, lambda_val = 0.1, alpha = 40, iterations
     # Begin iterations
    
     for iter_step in range(iterations): # Iterate back and forth between solving X given fixed Y and vice versa
+        start_time = time.time()
         # Compute yTy and xTx at beginning of each iteration to save computing time
         yTy = Y.T.dot(Y)
         xTx = X.T.dot(X)
@@ -137,15 +140,20 @@ def implicit_weighted_ALS(training_set, lambda_val = 0.1, alpha = 40, iterations
             CiI = sp.diags(conf_samp, [0]) # Get Ci - I term, don't need to subtract 1 since we never added it
             xTCiIX = X.T.dot(CiI).dot(X) # This is the xT(Cu-I)X term
             xTCiPi = X.T.dot(CiI + X_eye).dot(pref.T) # This is the xTCiPi term
-            Y[i] = sp(xTx + xTCiIX + lambda_eye, xTCiPi)
+            Y[i] = sp.linalg.spsolve(xTx + xTCiIX + lambda_eye, xTCiPi)
             # Solve for Yi = ((xTx + xT(Cu-I)X) + lambda*I)^-1)xTCiPi, equation 5 from the paper
+        print(" ---#%s iteration --- %s seconds ---" % (iter_step + 1, time.time() - start_time))
     # End iterations
     return X, Y.T # Transpose at the end to make up for not being transposed at the beginning. 
                          # Y needs to be rank x n. Keep these as separate matrices for scale reasons.
 
-user_vecs, item_vecs = implicit_weighted_ALS(X_train, lambda_val = 0.1, alpha = 15, iterations = 1,
+start_time = time.time()
+user_vecs, item_vecs = implicit_weighted_ALS(X_train, lambda_val = 0.1, alpha = 15, iterations = 2,
                                             rank_size = 20)
 
+# Took 5.5 minutes for 1 iteration
+# Let's do more iterations
+print(" ---%s seconds ---" % (time.time() - start_time))
 print(user_vecs)
 print(item_vecs)
 
@@ -173,4 +181,12 @@ def predict_topk(ratings, similarity, kind='user', k=40):
     
     return pred
 
-# pred = predict_topk(X_train, cosine_similarity_matrix_ll, kind='user', k=5)
+
+pred = predict_topk(X_train, cosine_similarity_matrix_ll, kind='user', k=5)
+
+# How to Save?
+# I can save as a .npz, but in some cloud service providers (e.g. AWS SageMaker), I can save this model artifact as a model_output.tar.gz
+# sp.save_npz('/tmp/als_sparse_matrix.npz', pred)
+
+# How to Make a prediction?  The end
+pred = sp.load_npz('/tmp/als_sparse_matrix.np')
